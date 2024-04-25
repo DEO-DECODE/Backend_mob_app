@@ -1,26 +1,6 @@
 import mongoose from "mongoose";
 /*
-Projects : {
-        duration:’ ’,
-        description:’ ’,
-         attachment:{
-                 attchmentName:’ ‘,
-                  attachmentUrl: ‘ `‘,
-         }, 
-         status: ’ available ’,
-         assignedTo:’<uid of freelncr>’,
-         delivery:{
-              deliveryName:’ ’,
-              deliveryUrl:’ ’
-          },
-         proposal:{
-                proposedBy:’ ’,
-                proposedDuration:’ ’
-                proposedPrice:’ ’
-                finalPrice : formulatedOne
-                proposalStatus:’ progress ’
-         }              
-}
+
 */
 const projectSchema = new mongoose.Schema({
   uploadedBy: {
@@ -28,19 +8,68 @@ const projectSchema = new mongoose.Schema({
     ref: "User",
     required: [true, "Please Add the details of the owner of the project"],
   },
-  title:{
+  title: {
     type: String,
-    required:[true, "Please add the title of the project"]
+    required: [true, "Please add the title of the project"],
   },
-  subject:{
+  subject: {
     type: String,
-  }
-  ,
-  university:{
-    type: String
   },
-  duration:{
-    
-  }
+  university: {
+    type: String,
+  },
+  duration: {
+    type: Number,
+    required: [true, "Please provide the duration"],
+  },
+  attachment: {
+    attchmentName: {
+      type: String,
+      required: [true, "Please Provide the attachment"],
+    },
+    attachmentUrl: {
+      type: String,
+      required: [true, "Please Provide the url"],
+    },
+  },
+  status: {
+    type: String,
+    enum: ["active", "available", "completed"],
+    default: "available",
+  },
+  assignedTo: {
+    type: mongoose.Schema.ObjectId,
+    ref: "Users",
+  },
+  delivery: {
+    deliveryName: {
+      type: String,
+    },
+    deliveryUrl: {
+      type: String,
+    },
+  },
+  proposal: [
+    {
+      proposedBy: {
+        type: mongoose.Schema.ObjectId,
+        ref: "Users",
+      },
+      proposedDuration: {
+        type: Number,
+      },
+      proposedPrice: {
+        type: Number,
+      },
+
+      finalprice: {
+        type: Number,
+      },
+      proposalStatus: {
+        enum: ["active", "completed", "not completed"],
+        default: "not completed",
+      },
+    },
+  ],
 });
 export const Project = mongoose.model("Projects", projectSchema, "Projects");

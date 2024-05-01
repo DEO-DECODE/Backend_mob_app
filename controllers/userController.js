@@ -17,17 +17,19 @@ export const login = async (req, res, next) => {
     if (!isPasswordMatched) {
       return next(errorHandler(400, "Invalid email or password"));
     }
-    const { password: excludedPassword, ...userWithoutPassword } = user.toObject();
-    sendToken(userWithoutPassword, 201, res, "Login Successfully");
+    // const { password: excludedPassword, ...userWithoutPassword } =
+    //   user.toObject();
+    sendToken(user, 201, res, "Login Successfully", next);
   } catch (error) {
     next(error);
   }
 };
 export const register = async (req, res, next) => {
   try {
+    console.log(req.body);
     const { name, email, accountType, password, number } = req.body;
     if (!name || !email || !accountType || !password || !number) {
-      return next(errorHandler(400, "Please fill full form!"));
+      return next(errorHandler(400, "Please Provide all Necessary detail!"));
     }
     const isEmail = await User.findOne({ email });
     if (isEmail) {
@@ -40,9 +42,38 @@ export const register = async (req, res, next) => {
       accountType,
       number,
     });
-    sendToken(user, 201, res, "User registered successfully");
+    sendToken(user, 201, res, "User registered successfully", next);
   } catch (error) {
     console.log("Some error occured in login");
+    next(error);
+  }
+};
+export const updateUser = async (req, res, next) => {
+  try {
+    console.log(req.body);
+    const { id } = req.params;
+    if (req.user.id !== id) {
+      return next(errorHandler(401, "You can only Update your Own Profile"));
+    }
+    const user = await User.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          name: req.body.name,
+          accountType: req.body.accountType,
+          number: req.body.number,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).json({
+      user,
+      success: true,
+      message:"User Updated successfully",
+    })
+  } catch (error) {
     next(error);
   }
 };

@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 /*
-
-*/
+ */
 const projectSchema = new mongoose.Schema({
   uploadedBy: {
     type: mongoose.Schema.ObjectId,
@@ -49,27 +48,5 @@ const projectSchema = new mongoose.Schema({
       type: String,
     },
   },
-  proposal: [
-    {
-      proposedBy: {
-        type: mongoose.Schema.ObjectId,
-        ref: "Users",
-      },
-      proposedDuration: {
-        type: Number,
-      },
-      proposedPrice: {
-        type: Number,
-      },
-
-      finalprice: {
-        type: Number,
-      },
-      proposalStatus: {
-        enum: ["active", "completed", "not completed"],
-        default: "not completed",
-      },
-    },
-  ],
 });
 export const Project = mongoose.model("Projects", projectSchema, "Projects");

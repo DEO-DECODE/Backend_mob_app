@@ -60,7 +60,6 @@ export const updateUser = async (req, res, next) => {
       {
         $set: {
           name: req.body.name,
-          accountType: req.body.accountType,
           number: req.body.number,
         },
       },
@@ -71,8 +70,26 @@ export const updateUser = async (req, res, next) => {
     res.status(200).json({
       user,
       success: true,
-      message:"User Updated successfully",
-    })
+      message: "User Updated successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+export const deleteProfile = async (req, res, next) => {
+  try {
+    if (req.params.id !== req.user.id) {
+      return next(errorHandler(401, "You Can Only Delete Your Own Account"));
+    }
+    await User.findByIdAndDelete(req.params.id);
+    res.cookie("token", null, {
+      expires: new Date(Date.now()),
+      httpOnly: true,
+    });
+    res.status(200).json({
+      sucess: true,
+      message: "Your Profile has been deleted Successfully",
+    });
   } catch (error) {
     next(error);
   }

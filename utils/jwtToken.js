@@ -12,7 +12,6 @@ export const sendToken = async (user, statusCode, res, message, next) => {
     console.log(userWithoutPassword);
     res.status(statusCode).cookie("token", token, options).json({
       user: userWithoutPassword,
-      token,
       message,
       success: true,
     });

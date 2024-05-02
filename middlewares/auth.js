@@ -3,7 +3,6 @@ import { errorHandler } from "./errorHandler.js";
 import jwt from "jsonwebtoken";
 export const isAuthenticated = async (req, res, next) => {
   try {
-    
     const { token } = req.cookies;
     if (!token) {
       return next(errorHandler(401, "Please Login to access"));
@@ -14,4 +13,10 @@ export const isAuthenticated = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+export const autherizedAdmin = (req, res, next) => {
+  if (req.user.accountType !== "admin") {
+    return next(errorHandler(403, "You can not access this resource"));
+  }
+  next();
 };

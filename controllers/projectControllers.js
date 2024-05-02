@@ -29,3 +29,25 @@ export const addProject = async (req, res, next) => {
     next(error);
   }
 };
+export const getProjects = async (req, res, next) => {
+  try {
+    let status = req.query.status;
+    if (status === undefined || status === "all") {
+      status = { $in: ["active", "available", "completed"] };
+    } else if (status === "active") {
+      status = { $in: ["active"] };
+    } else if (status === "available") {
+      status = { $in: ["available"] };
+    } else if (status === "completed") {
+      status = { $in: ["completed"] };
+    }
+    const projects = await Project.find({ status });
+    res.status(200).json({
+      projects,
+      success: true,
+      message: `Showing Projects`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

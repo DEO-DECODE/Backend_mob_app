@@ -22,7 +22,7 @@ const projectSchema = new mongoose.Schema({
     required: [true, "Please provide the duration"],
   },
   attachment: {
-    attchmentName: {
+    attachmentName: {
       type: String,
       required: [true, "Please Provide the attachment"],
     },

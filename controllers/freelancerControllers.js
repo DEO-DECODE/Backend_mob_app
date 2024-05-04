@@ -39,11 +39,12 @@ export const uploadDocument = async (req, res, next) => {
     if (!project) {
       return next(errorHandler(404, "Project not found"));
     }
-    const updatedProject = await Project.findByIdAndUpdate(
-      id,
-      { attachment: { attachmentName, attachmentUrl } },
-      { new: true }
-    );
+    const updatedProject = await Project.findByIdAndUpdate(id, {
+      $set: {
+        "attachment.attachmentName": attachmentName,
+        "attachment.attachmentUrl": attachmentUrl,
+      },
+    });
     res.status(200).json({
       updatedProject,
       success: true,

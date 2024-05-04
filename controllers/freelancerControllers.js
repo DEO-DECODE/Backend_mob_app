@@ -30,3 +30,26 @@ export const bidForProject = async (req, res, next) => {
     next(error);
   }
 };
+export const uploadDocument = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const attachmentName = "sampleAttachment";
+    const attachmentUrl = "sampleUrl";
+    const project = await Project.findById(id);
+    if (!project) {
+      return next(errorHandler(404, "Project not found"));
+    }
+    const updatedProject = await Project.findByIdAndUpdate(
+      id,
+      { attachment: { attachmentName, attachmentUrl } },
+      { new: true }
+    );
+    res.status(200).json({
+      updatedProject,
+      success: true,
+      message: "Attachment uploaded successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};

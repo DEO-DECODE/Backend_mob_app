@@ -18,8 +18,9 @@ const proposalSchema = mongoose.Schema({
     type: Number,
   },
   proposalStatus: {
-    enum: ["active", "completed", "in progress"],
-    default: "in progress",
+    type: String,
+    enum: ["active", "completed", "available"],
+    default: "available",
   },
 });
 export const Proposal = mongoose.model(

@@ -20,3 +20,9 @@ export const autherizedAdmin = (req, res, next) => {
   }
   next();
 };
+export const autherizedFreelancer = (req, res, next) => {
+  if (req.user.accountType !== "freelancer") {
+    return next(errorHandler(403, "You can not access this resource"));
+  }
+  next();
+};

@@ -5,7 +5,7 @@ export const addProject = async (req, res, next) => {
   try {
     const { title, subject, university, duration, status } = req.body;
     if (!title || !subject || !duration) {
-      next(errorHandler(400, "Please Provide all the mandaory fields"));
+      return next(errorHandler(400, "Please Provide all the mandaory fields"));
     }
     const uploadedBy = req.user._id;
     const project = await Project.create({

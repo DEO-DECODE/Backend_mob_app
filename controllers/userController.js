@@ -50,13 +50,9 @@ export const register = async (req, res, next) => {
 };
 export const updateUser = async (req, res, next) => {
   try {
-    console.log(req.body);
-    const { id } = req.params;
-    if (req.user.id !== id) {
-      return next(errorHandler(401, "You can only Update your Own Profile"));
-    }
+    // console.log(req.body);
     const user = await User.findByIdAndUpdate(
-      id,
+      req.user.id,
       {
         $set: {
           name: req.body.name,
@@ -78,10 +74,7 @@ export const updateUser = async (req, res, next) => {
 };
 export const deleteProfile = async (req, res, next) => {
   try {
-    if (req.params.id !== req.user.id) {
-      return next(errorHandler(401, "You Can Only Delete Your Own Account"));
-    }
-    await User.findByIdAndDelete(req.params.id);
+    await User.findByIdAndDelete(req.user.id);
     res.cookie("token", null, {
       expires: new Date(Date.now()),
       httpOnly: true,

@@ -51,3 +51,39 @@ export const getProjects = async (req, res, next) => {
     next(error);
   }
 };
+export const getProjectByid = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const project = await Project.findById(id);
+    if (!project) {
+      return next(errorHandler(404, "No such project exists"));
+    }
+    res.status(201).json({
+      project,
+      success: true,
+      message: "Project found successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getProjectsByAssignedTo = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.isValidObjectId(userId)) {
+      next(errorHandler(400, "Invalid userId"));
+    }
+    const projects = await Project.find({ assignedTo: id }).populate("name");
+    if (!projects || projects.length === 0) {
+      return next(errorHandler(404, "No projects found for this user"));
+    }
+    res.status(200).json({
+      success: true,
+      message: `Finding all projects assigned to ${req.user.name}`,
+      projects,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

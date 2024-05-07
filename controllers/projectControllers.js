@@ -4,8 +4,14 @@ import { Project } from "../models/projectModel.js";
 export const addProject = async (req, res, next) => {
   try {
     const { title, subject, university, duration, status } = req.body;
+    console.log(req.body);
+    const { originalname, filename, path } = req.file;
+    console.log(req.file);
     if (!title || !subject || !duration) {
       return next(errorHandler(400, "Please Provide all the mandaory fields"));
+    }
+    if (!req.file) {
+      return next(errorHandler(400, "No file uploaded"));
     }
     const uploadedBy = req.user._id;
     const project = await Project.create({
@@ -15,8 +21,8 @@ export const addProject = async (req, res, next) => {
       university,
       duration,
       attachment: {
-        attchmentName: "Sample",
-        attachmentUrl: "Sample Url",
+        attachmentName: originalname,
+        attachmentUrl: path,
       },
       status,
     });

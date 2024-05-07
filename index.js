@@ -7,7 +7,6 @@ import userRoutes from "./routes/userRoutes.js";
 import projectRoutes from "./routes/projectRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import freelancerRoutes from "./routes/freelancerRoutes.js";
-import fileUpload from "express-fileupload";
 import cookieParser from "cookie-parser";
 config({ path: "./config/config.env" });
 dbConnection();
@@ -15,11 +14,6 @@ const app = express();
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
-app.use(
-  fileUpload({
-    useTempFiles: true,
-  })
-);
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/project", projectRoutes);
 app.use("/api/v1/admin", adminRoutes);

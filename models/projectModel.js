@@ -24,11 +24,9 @@ const projectSchema = new mongoose.Schema({
   attachment: {
     attachmentName: {
       type: String,
-      required: [true, "Please Provide the attachment"],
     },
     attachmentUrl: {
       type: String,
-      required: [true, "Please Provide the url"],
     },
   },
   status: {

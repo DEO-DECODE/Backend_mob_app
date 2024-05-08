@@ -33,18 +33,23 @@ export const bidForProject = async (req, res, next) => {
 export const uploadDocument = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const attachmentName = "sampleAttachment";
-    const attachmentUrl = "sampleUrl";
+    if (!req.file) {
+      next(errorHandler(400, "No file Uploaded"));
+    }
+    const { originalname, filename, path } = req.file;
+    const attachment = {
+      attachmentName: originalname,
+      attachmentUrl: path,
+    };
     const project = await Project.findById(id);
     if (!project) {
       return next(errorHandler(404, "Project not found"));
     }
-    const updatedProject = await Project.findByIdAndUpdate(id, {
-      $set: {
-        "attachment.attachmentName": attachmentName,
-        "attachment.attachmentUrl": attachmentUrl,
-      },
-    });
+    const updatedProject = await Project.findByIdAndUpdate(
+      id,
+      { attachment },
+      { new: true }
+    );
     res.status(200).json({
       updatedProject,
       success: true,

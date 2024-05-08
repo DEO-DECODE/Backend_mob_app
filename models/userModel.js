@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "Please enter your Name!"], 
+    required: [true, "Please enter your Name!"],
     minLength: [3, "Name must contain at least 3 Characters!"],
     /*Or Some minimum Length value of charaters*/
     maxLength: [30, "Name cannot exceed 30 Characters!"],
@@ -20,8 +20,13 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, "Please Enter the Password"],
-    minLength: [6, "Password must contain at least 6 Characters!"],
-    maxLength: [10, "Password cannot exceed 10 Characters!"],
+    validate: {
+      validator: function (value) {
+        return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{6,10}$/.test(value);
+      },
+      message: (props) =>
+        `${props.value} is not a valid password! Password must be 6-10 characters long and contain at least one digit, one lowercase letter, one uppercase letter, and one special character.`,
+    },
     select: false,
   },
   accountType: {

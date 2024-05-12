@@ -75,13 +75,22 @@ export const updateUser = async (req, res, next) => {
 export const deleteProfile = async (req, res, next) => {
   try {
     await User.findByIdAndDelete(req.user.id);
-    res.cookie("token", null, {
-      expires: new Date(Date.now()),
-      httpOnly: true,
-    });
     res.status(200).json({
       sucess: true,
       message: "Your Profile has been deleted Successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getOwnProfile = async (req, res, next) => {
+  try {
+    const profile = req.user;
+    res.status(200).json({
+      profile,
+      sucess: true,
+      message: "Fetched your details",
     });
   } catch (error) {
     next(error);

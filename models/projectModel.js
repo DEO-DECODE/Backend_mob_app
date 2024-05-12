@@ -31,7 +31,7 @@ const projectSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["active", "available", "completed"],
+    enum: ["active", "available", "completed", "in checking"],
     default: "available",
   },
   assignedTo: {

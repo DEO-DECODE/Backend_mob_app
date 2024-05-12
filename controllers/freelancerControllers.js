@@ -47,7 +47,7 @@ export const uploadDocument = async (req, res, next) => {
     }
     const updatedProject = await Project.findByIdAndUpdate(
       id,
-      { attachment },
+      { attachment, status: "in checking" },
       { new: true }
     );
     res.status(200).json({

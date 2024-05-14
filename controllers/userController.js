@@ -17,8 +17,7 @@ export const login = async (req, res, next) => {
     if (!isPasswordMatched) {
       return next(errorHandler(400, "Invalid email or password"));
     }
-    // const { password: excludedPassword, ...userWithoutPassword } =
-    //   user.toObject();
+    // console.log(user);
     sendToken(user, 201, res, "Login Successfully", next);
   } catch (error) {
     next(error);
@@ -51,6 +50,7 @@ export const register = async (req, res, next) => {
 export const updateUser = async (req, res, next) => {
   try {
     // console.log(req.body);
+    console.log(req.user);
     const user = await User.findByIdAndUpdate(
       req.user.id,
       {

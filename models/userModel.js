@@ -36,14 +36,6 @@ const userSchema = new mongoose.Schema({
   number: {
     type: Number,
     required: [true, "Please enter your Phone Number!"],
-    // validate: {
-    //   validator: function (v) {
-    //     // Validating that the contact number is exactly 10 digits
-    //     return /^\d{10}$/.test(v);
-    //   },
-    //   message: (props) =>
-    //     `${props.value} is not a valid 10-digit phone number!`,
-    // },
   },
 });
 
@@ -57,6 +49,7 @@ userSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 userSchema.methods.getJWTToken = function () {
+  console.log(this._id);
   return jwt.sign({ _id: this._id }, process.env.JWT_SECRET_KEY, {
     expiresIn: "15d",
   });

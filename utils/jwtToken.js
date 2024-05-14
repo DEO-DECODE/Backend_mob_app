@@ -1,5 +1,6 @@
 export const sendToken = async (user, statusCode, res, message, next) => {
   try {
+    // console.log(user);
     const token = user.getJWTToken();
     const { password, ...userWithoutPassword } = user.toObject();
     res.status(statusCode).json({

@@ -51,7 +51,7 @@ export const uploadDocument = async (req, res, next) => {
     const { originalname, filename, path } = req.file;
     const attachment = {
       attachmentName: originalname,
-      attachmentUrl: path,
+      attachmentUrl: `/uploads/${filename}`,
     };
     const project = await Project.findById(id);
     if (!project) {

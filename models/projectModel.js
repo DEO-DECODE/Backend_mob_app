@@ -14,6 +14,9 @@ const projectSchema = new mongoose.Schema({
   subject: {
     type: String,
   },
+  description: {
+    type: String,
+  },
   university: {
     type: String,
   },

@@ -2,6 +2,7 @@ import { errorHandler } from "../middlewares/errorHandler.js";
 import { User } from "../models/userModel.js";
 import { sendToken } from "../utils/jwtToken.js";
 import { Project } from "../models/projectModel.js";
+import { Proposal } from "../models/proposalModel.js";
 export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -102,8 +103,6 @@ export const getDownloadUrl = async (req, res, next) => {
   try {
     const { id } = req.params;
     const project = await Project.findById(id);
-    project.status = "completed";
-    await project.save();
     if (!project) {
       return next(errorHandler(404, "Project not found"));
     }
@@ -117,6 +116,25 @@ export const getDownloadUrl = async (req, res, next) => {
       downloadUrl,
       success: true,
       message: "Dowmload url Provided",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getProposalsByProjectId = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const proposals = await Proposal.find({ projectId: id })
+      .populate("proposedBy", "name email")
+      .populate("projectId", "title description");
+    if (!proposals) {
+      return next(errorHandler(404, "No Proposals found for this project"));
+    }
+    res.status(200).json({
+      proposals,
+      success: true,
+      message: "All Proposals for this Project Fetched Successfully",
     });
   } catch (error) {
     next(error);

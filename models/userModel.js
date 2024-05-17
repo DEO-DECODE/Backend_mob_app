@@ -22,10 +22,10 @@ const userSchema = new mongoose.Schema({
     required: [true, "Please Enter the Password"],
     validate: {
       validator: function (value) {
-        return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{6,10}$/.test(value);
+        return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{6,15}$/.test(value);
       },
       message: (props) =>
-        `${props.value} is not a valid password! Password must be 6-10 characters long and contain at least one digit, one lowercase letter, one uppercase letter, and one special character.`,
+        `${props.value} is not a valid password! Password must be 6-15 characters long and contain at least one digit, one lowercase letter, one uppercase letter, and one special character.`,
     },
     select: false,
   },

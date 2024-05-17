@@ -8,6 +8,7 @@ import projectRoutes from "./routes/projectRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import freelancerRoutes from "./routes/freelancerRoutes.js";
 import chatRoutes from "./routes/chatRoutes.js";
+import paymentRoutes from "./routes/paymentRoutes.js";
 import cookieParser from "cookie-parser";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -24,6 +25,7 @@ app.use("/api/v1/project", projectRoutes);
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/freelancer", freelancerRoutes);
 app.use("/api/v1/chats", chatRoutes);
+app.use("/api/v1/payment", paymentRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use((err, req, res, next) => {
   const message = err.message || "Internal Server Error";

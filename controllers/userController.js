@@ -1,6 +1,7 @@
 import { errorHandler } from "../middlewares/errorHandler.js";
 import { User } from "../models/userModel.js";
 import { sendToken } from "../utils/jwtToken.js";
+import { Project } from "../models/projectModel.js";
 export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -17,8 +18,7 @@ export const login = async (req, res, next) => {
     if (!isPasswordMatched) {
       return next(errorHandler(400, "Invalid email or password"));
     }
-    // const { password: excludedPassword, ...userWithoutPassword } =
-    //   user.toObject();
+    // console.log(user);
     sendToken(user, 201, res, "Login Successfully", next);
   } catch (error) {
     next(error);
@@ -51,6 +51,7 @@ export const register = async (req, res, next) => {
 export const updateUser = async (req, res, next) => {
   try {
     // console.log(req.body);
+    console.log(req.user);
     const user = await User.findByIdAndUpdate(
       req.user.id,
       {
@@ -91,6 +92,31 @@ export const getOwnProfile = async (req, res, next) => {
       profile,
       sucess: true,
       message: "Fetched your details",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getDownloadUrl = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const project = await Project.findById(id);
+    project.status = "completed";
+    await project.save();
+    if (!project) {
+      return next(errorHandler(404, "Project not found"));
+    }
+    if (!project.attachment || !project.attachment.attachmentUrl) {
+      return next(errorHandler(404, "No attachment found for this project"));
+    }
+    const downloadUrl = `${req.protocol}://${req.get("host")}${
+      project.attachment.attachmentUrl
+    }`;
+    res.status(200).json({
+      downloadUrl,
+      success: true,
+      message: "Dowmload url Provided",
     });
   } catch (error) {
     next(error);

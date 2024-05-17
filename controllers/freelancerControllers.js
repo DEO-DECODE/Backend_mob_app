@@ -14,6 +14,18 @@ export const bidForProject = async (req, res, next) => {
     }
     const proposedBy = req.user.id;
     const projectId = id;
+    const existingProposal = await Proposal.findOne({
+      proposedBy,
+      projectId,
+      proposalStatus: { $ne: "completed" },
+    });
+
+    if (existingProposal) {
+      return next(
+        errorHandler(400, "You have already proposed for this project")
+      );
+    }
+
     const proposal = await Proposal.create({
       proposedBy,
       projectId,
@@ -39,7 +51,7 @@ export const uploadDocument = async (req, res, next) => {
     const { originalname, filename, path } = req.file;
     const attachment = {
       attachmentName: originalname,
-      attachmentUrl: path,
+      attachmentUrl: `/uploads/${filename}`,
     };
     const project = await Project.findById(id);
     if (!project) {

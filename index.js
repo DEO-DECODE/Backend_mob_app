@@ -9,6 +9,10 @@ import adminRoutes from "./routes/adminRoutes.js";
 import freelancerRoutes from "./routes/freelancerRoutes.js";
 import chatRoutes from "./routes/chatRoutes.js";
 import cookieParser from "cookie-parser";
+import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 config({ path: "./config/config.env" });
 dbConnection();
 const app = express();
@@ -20,6 +24,7 @@ app.use("/api/v1/project", projectRoutes);
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/freelancer", freelancerRoutes);
 app.use("/api/v1/chats", chatRoutes);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use((err, req, res, next) => {
   const message = err.message || "Internal Server Error";
   const statusCode = err.statusCode || 500;

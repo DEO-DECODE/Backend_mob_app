@@ -1,5 +1,5 @@
 import express from "express";
-import { isAuthenticated } from "../middlewares/auth.js";
+import { autherizedClient, isAuthenticated } from "../middlewares/auth.js";
 import {
   addProject,
   getProjects,
@@ -12,6 +12,7 @@ const router = express.Router();
 router.post(
   "/addproject",
   isAuthenticated,
+  autherizedClient,
   upload.single("attachment"),
   addProject
 );

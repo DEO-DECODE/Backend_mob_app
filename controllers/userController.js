@@ -140,3 +140,12 @@ export const getProposalsByProjectId = async (req, res, next) => {
     next(error);
   }
 };
+
+export const acceptOffer = async (req, res, next) => {
+  try{
+    
+  }
+  catch(error){
+    next(error);
+  }
+};

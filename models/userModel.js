@@ -54,4 +54,4 @@ userSchema.methods.getJWTToken = function () {
     expiresIn: "15d",
   });
 };
-export const User = mongoose.model("Users", userSchema, "Users");
+export const User = mongoose.model("User", userSchema, "User");

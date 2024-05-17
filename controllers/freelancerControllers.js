@@ -46,20 +46,30 @@ export const uploadDocument = async (req, res, next) => {
   try {
     const { id } = req.params;
     if (!req.file) {
+      return next(errorHandler(400, "No file uploaded"));
+    }
+    if (!req.file) {
       next(errorHandler(400, "No file Uploaded"));
     }
     const { originalname, filename, path } = req.file;
-    const attachment = {
-      attachmentName: originalname,
-      attachmentUrl: `/uploads/${filename}`,
+    const delivery = {
+      deliveryName: originalname,
+      deliveryUrl: `/uploads/${filename}`,
     };
     const project = await Project.findById(id);
     if (!project) {
       return next(errorHandler(404, "Project not found"));
     }
+    if (project.assignedTo.toString() !== req.user.id.toString()) {
+      console.log(project);
+      console.log(req.user);
+      return next(
+        errorHandler(401, "You cannot upload doccument for this project")
+      );
+    }
     const updatedProject = await Project.findByIdAndUpdate(
       id,
-      { attachment, status: "in checking" },
+      { delivery, status: "in checking" },
       { new: true }
     );
     res.status(200).json({

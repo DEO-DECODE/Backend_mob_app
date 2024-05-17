@@ -11,10 +11,10 @@ export const isAuthenticated = async (req, res, next) => {
     const decodedData = jwt.verify(token, process.env.JWT_SECRET_KEY);
     // console.log(decodedData);
     const user = await User.findById(decodedData);
-    if(!user){
+    if (!user) {
       return next(errorHandler(404, "No user found"));
     }
-    req.user=user;
+    req.user = user;
     // console.log(req.user);
     next();
   } catch (error) {
@@ -29,6 +29,12 @@ export const autherizedAdmin = (req, res, next) => {
 };
 export const autherizedFreelancer = (req, res, next) => {
   if (req.user.accountType !== "freelancer") {
+    return next(errorHandler(403, "You can not access this resource"));
+  }
+  next();
+};
+export const autherizedClient = (req, res, next) => {
+  if (req.user.accountType !== "client") {
     return next(errorHandler(403, "You can not access this resource"));
   }
   next();

@@ -2,15 +2,15 @@ import mongoose from "mongoose";
 const chatSchema = new mongoose.Schema({
   projectId: {
     type: mongoose.Schema.ObjectId,
-    ref: "Projects",
+    ref: "Project",
   },
   senderId: {
     type: mongoose.Schema.ObjectId,
-    ref: "Users",
+    ref: "User",
   },
   receiverId: {
     type: mongoose.Schema.ObjectId,
-    ref: "Users",
+    ref: "User",
   },
   message: {
     type: String,
@@ -25,4 +25,4 @@ const chatSchema = new mongoose.Schema({
   },
   timestamp: { type: Date, default: Date.now },
 });
-export const Chat= mongoose.model("Chats", chatSchema, "Chats");
+export const Chat= mongoose.model("Chat", chatSchema, "Chat");

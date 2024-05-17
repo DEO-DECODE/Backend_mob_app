@@ -3,16 +3,15 @@ import { Project } from "../models/projectModel.js";
 
 export const addProject = async (req, res, next) => {
   try {
-    const { title, subject, university, duration, status } = req.body;
-    console.log(req.body);
-    const { originalname, filename, path } = req.file;
-    console.log(req.file);
+    const { title, subject, university, duration, status, description } =
+      req.body;
     if (!title || !subject || !duration) {
       return next(errorHandler(400, "Please Provide all the mandaory fields"));
     }
     if (!req.file) {
       return next(errorHandler(400, "No file uploaded"));
     }
+    const { originalname, filename, path } = req.file;
     const uploadedBy = req.user._id;
     const project = await Project.create({
       uploadedBy,
@@ -20,6 +19,7 @@ export const addProject = async (req, res, next) => {
       subject,
       university,
       duration,
+      description,
       attachment: {
         attachmentName: originalname,
         attachmentUrl: path,
@@ -77,10 +77,12 @@ export const getProjectByid = async (req, res, next) => {
 export const getProjectsByAssignedTo = async (req, res, next) => {
   try {
     const { id } = req.params;
-    if (!mongoose.isValidObjectId(userId)) {
-      next(errorHandler(400, "Invalid userId"));
-    }
-    const projects = await Project.find({ assignedTo: id }).populate("name");
+    // console.log(req.user);
+    console.log(id);
+    const projects = await Project.find();
+    projects.map((elem)=>{
+      console.log(elem.assignedTo);
+    })
     if (!projects || projects.length === 0) {
       return next(errorHandler(404, "No projects found for this user"));
     }

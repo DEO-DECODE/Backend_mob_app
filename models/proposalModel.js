@@ -2,11 +2,11 @@ import mongoose from "mongoose";
 const proposalSchema = mongoose.Schema({
   proposedBy: {
     type: mongoose.Schema.ObjectId,
-    ref: "Users",
+    ref: "User",
   },
   projectId: {
     type: mongoose.Schema.ObjectId,
-    ref: "Projects",
+    ref: "Project",
   },
   proposedDuration: {
     type: Number,
@@ -24,7 +24,7 @@ const proposalSchema = mongoose.Schema({
   },
 });
 export const Proposal = mongoose.model(
-  "Proposals",
+  "Proposal",
   proposalSchema,
-  "Proposals"
+  "Proposal"
 );

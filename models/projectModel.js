@@ -39,7 +39,7 @@ const projectSchema = new mongoose.Schema({
   },
   assignedTo: {
     type: mongoose.Schema.ObjectId,
-    ref: "Users",
+    ref: "User",
   },
   delivery: {
     deliveryName: {
@@ -50,4 +50,4 @@ const projectSchema = new mongoose.Schema({
     },
   },
 });
-export const Project = mongoose.model("Projects", projectSchema, "Projects");
+export const Project = mongoose.model("Project", projectSchema, "Project");

@@ -1,31 +1,42 @@
-import { errorHandler } from "../middlewares/errorHandler.js";
-// export const makePayment = async (req, res) => {
-//   try {
-//     const amount = req.body.amount * 100;
-//     const options = {
-//       amount: amount,
-//       currency: "INR",
-//       receipt: "d.jrajsingh81@gmail.com",
-//     };
-//     razorpayInstance.orders.create(options, (err, order) => {
-//       if (!err) {
-//         res.status(200).send({
-//           success: true,
-//           msg: "Payment Done",
-//           order_id: order.id,
-//           amount: amount,
-//           key_id: RAZORPAY_ID_KEY,
-//           product_name: req.body.name,
-//           description: req.body.description,
-//           contact: "7231950617",
-//           name: "Deo Raj",
-//           email: "d.jrajsingh81@gmail.com",
-//         });
-//       } else {
-//         return next(errorHandler(400, "Something Went Wrong"));
-//       }
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+import Razorpay from "razorpay";
+import crypto from "crypto";
+const razorpay = new Razorpay({
+  key_id: "KEY_ID",
+  key_secret: "KEY_SECRET",
+});
+
+export const creteOrder = async (req, res) => {
+  const { amount, currency, receipt } = req.body;
+
+  const options = {
+    amount: amount * 100,
+    currency: currency,
+    receipt: receipt,
+  };
+
+  try {
+    const order = await razorpay.orders.create(options);
+    res
+      .status(200)
+      .json({ order, sucess: true, message: "Order Created Successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const verifyPayment = async (req, res) => {
+  try {
+    const { order_id, payment_id, signature } = req.body;
+    const hmac = crypto.createHmac("sha256", "YOUR_KEY_SECRET");
+    hmac.update(order_id + "|" + payment_id);
+    const generatedSignature = hmac.digest("hex");
+
+    if (generatedSignature === signature) {
+      res.status(200).json({ status: "success" });
+    } else {
+      res.status(500).json({ status: "failure" });
+    }
+  } catch (error) {
+    next(error);
+  }
+};

@@ -60,9 +60,9 @@ export const uploadDocument = async (req, res, next) => {
     if (!project) {
       return next(errorHandler(404, "Project not found"));
     }
+    console.log(project.assignedTo);
+    console.log(req.user.id);
     if (project.assignedTo.toString() !== req.user.id.toString()) {
-      console.log(project);
-      console.log(req.user);
       return next(
         errorHandler(401, "You cannot upload doccument for this project")
       );
@@ -76,6 +76,26 @@ export const uploadDocument = async (req, res, next) => {
       updatedProject,
       success: true,
       message: "Attachment uploaded successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getProjectsByAssignedTo = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    console.log(id);
+    const projects = await Project.find().populate("assignedTo");
+
+    if (!projects || projects.length === 0) {
+      return next(new Error("No projects found for this user"));
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Showing projects assigned to user ${id}`,
+      projects,
     });
   } catch (error) {
     next(error);

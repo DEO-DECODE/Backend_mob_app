@@ -37,17 +37,7 @@ export const addProject = async (req, res, next) => {
 };
 export const getProjects = async (req, res, next) => {
   try {
-    let status = req.query.status;
-    if (status === undefined || status === "all") {
-      status = { $in: ["active", "available", "completed"] };
-    } else if (status === "active") {
-      status = { $in: ["active"] };
-    } else if (status === "available") {
-      status = { $in: ["available"] };
-    } else if (status === "completed") {
-      status = { $in: ["completed"] };
-    }
-    const projects = await Project.find({ status });
+    const projects = await Project.find().populate("uploadedBy");
     res.status(200).json({
       projects,
       success: true,
@@ -79,10 +69,8 @@ export const getProjectsByAssignedTo = async (req, res, next) => {
     const { id } = req.params;
     // console.log(req.user);
     console.log(id);
-    const projects = await Project.find();
-    projects.map((elem)=>{
-      console.log(elem.assignedTo);
-    })
+    // const projects = await Project.find().populate("assignedTo");
+    const projects = await Project.find({assignedTo: id});
     if (!projects || projects.length === 0) {
       return next(errorHandler(404, "No projects found for this user"));
     }

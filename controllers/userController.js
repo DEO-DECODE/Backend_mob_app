@@ -105,14 +105,21 @@ export const getDownloadUrl = async (req, res, next) => {
     if (!project) {
       return next(errorHandler(404, "Project not found"));
     }
-    if (!project.delivery || !project.delivery.deliveryUrl) {
-      return next(errorHandler(404, "No attachment found for this project"));
-    }
-    const downloadUrl = `${req.protocol}://${req.get("host")}${
+    // if (!project.delivery || !project.delivery.deliveryUrl) {
+    //   return next(errorHandler(404, "No delivery found for this project"));
+    // }
+    const downloadUrlforDelivery = `${req.protocol}://${req.get("host")}${
       project.delivery.deliveryUrl
     }`;
+    // if (!project.attachment || !project.attachment.attachmentUrl) {
+    //   return next(errorHandler(404, "No attachment found for this project"));
+    // }
+    const downloadUrlforAttachment = `${req.protocol}://${req.get("host")}${
+      project.attachment.attachmentUrl
+    }`;
     res.status(200).json({
-      downloadUrl,
+      downloadUrlforDelivery,
+      downloadUrlforAttachment,
       success: true,
       message: "Dowmload url Provided",
     });

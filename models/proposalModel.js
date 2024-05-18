@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 const proposalSchema = mongoose.Schema({
   proposedBy: {
-    type: mongoose.Schema.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
   projectId: {
-    type: mongoose.Schema.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "Project",
   },
   proposedDuration: {

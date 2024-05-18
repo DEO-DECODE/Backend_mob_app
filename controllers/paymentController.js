@@ -5,7 +5,7 @@ const razorpay = new Razorpay({
   key_secret: "KEY_SECRET",
 });
 
-export const creteOrder = async (req, res) => {
+export const createOrder = async (req, res) => {
   const { amount, currency, receipt } = req.body;
 
   const options = {

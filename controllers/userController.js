@@ -27,7 +27,6 @@ export const login = async (req, res, next) => {
 };
 export const register = async (req, res, next) => {
   try {
-    console.log(req.body);
     const { name, email, accountType, password, number } = req.body;
     if (!name || !email || !accountType || !password || !number) {
       return next(errorHandler(400, "Please Provide all Necessary detail!"));
@@ -127,7 +126,7 @@ export const getProposalsByProjectId = async (req, res, next) => {
     const { id } = req.params;
     const proposals = await Proposal.find({ projectId: id })
       .populate("proposedBy", "name email")
-      .populate("projectId", "title description");
+      .populate("projectId", "title");
     if (!proposals) {
       return next(errorHandler(404, "No Proposals found for this project"));
     }
@@ -142,10 +141,8 @@ export const getProposalsByProjectId = async (req, res, next) => {
 };
 
 export const acceptOffer = async (req, res, next) => {
-  try{
-    
-  }
-  catch(error){
+  try {
+  } catch (error) {
     next(error);
   }
 };

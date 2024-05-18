@@ -3,7 +3,7 @@ import mongoose from "mongoose";
  */
 const projectSchema = new mongoose.Schema({
   uploadedBy: {
-    type: mongoose.Schema.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: [true, "Please Add the details of the owner of the project"],
   },
@@ -38,7 +38,7 @@ const projectSchema = new mongoose.Schema({
     default: "available",
   },
   assignedTo: {
-    type: mongoose.Schema.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
   delivery: {

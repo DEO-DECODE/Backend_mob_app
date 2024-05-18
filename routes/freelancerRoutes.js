@@ -2,6 +2,7 @@ import express from "express";
 const router = express.Router();
 import {
   bidForProject,
+  getProjectsByAssignedTo,
   uploadDocument,
 } from "../controllers/freelancerControllers.js";
 import { autherizedFreelancer, isAuthenticated } from "../middlewares/auth.js";
@@ -14,4 +15,5 @@ router.put(
   autherizedFreelancer,
   uploadDocument
 );
+router.get("/getprojectsbyassignedto",isAuthenticated, getProjectsByAssignedTo);
 export default router;

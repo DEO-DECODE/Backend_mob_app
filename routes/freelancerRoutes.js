@@ -4,6 +4,7 @@ import {
   bidForProject,
   getProjectsByAssignedTo,
   uploadDocument,
+  getDownloadUrl,
 } from "../controllers/freelancerControllers.js";
 import { autherizedFreelancer, isAuthenticated } from "../middlewares/auth.js";
 import { upload } from "../middlewares/uploadMiddleware.js";
@@ -15,5 +16,15 @@ router.put(
   autherizedFreelancer,
   uploadDocument
 );
-router.get("/getprojectsbyassignedto",isAuthenticated, getProjectsByAssignedTo);
+router.get(
+  "/getprojectsbyassignedto",
+  isAuthenticated,
+  getProjectsByAssignedTo
+);
+router.get(
+  "/acceptanddownload/:id",
+  isAuthenticated,
+  autherizedFreelancer,
+  getDownloadUrl
+);
 export default router;

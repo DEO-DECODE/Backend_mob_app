@@ -18,12 +18,22 @@ router.route("/update").put(isAuthenticated, updateUser);
 router.delete("/delete", isAuthenticated, deleteProfile);
 router.get("/me", isAuthenticated, getOwnProfile);
 router.put("/acceptoffer/:id", isAuthenticated, acceptOffer);
-router.get("/acceptanddownlaod/:id", isAuthenticated, autherizedClient, getDownloadUrl);
+router.get(
+  "/acceptanddownload/:id",
+  isAuthenticated,
+  autherizedClient,
+  getDownloadUrl
+);
 router.get(
   "/getproposalsbyprojectid/:id",
   isAuthenticated,
   autherizedClient,
   getProposalsByProjectId
 );
-router.put("/assignfreelancer", isAuthenticated, autherizedClient, assignFreelancerToProject);
+router.put(
+  "/assignfreelancer",
+  isAuthenticated,
+  autherizedClient,
+  assignFreelancerToProject
+);
 export default router;

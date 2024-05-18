@@ -105,11 +105,11 @@ export const getDownloadUrl = async (req, res, next) => {
     if (!project) {
       return next(errorHandler(404, "Project not found"));
     }
-    if (!project.attachment || !project.attachment.attachmentUrl) {
+    if (!project.delivery || !project.delivery.deliveryUrl) {
       return next(errorHandler(404, "No attachment found for this project"));
     }
     const downloadUrl = `${req.protocol}://${req.get("host")}${
-      project.attachment.attachmentUrl
+      project.delivery.deliveryUrl
     }`;
     res.status(200).json({
       downloadUrl,

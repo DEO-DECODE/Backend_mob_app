@@ -103,3 +103,26 @@ export const getProjectsByAssignedTo = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getDownloadUrl = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const project = await Project.findById(id);
+    if (!project) {
+      return next(errorHandler(404, "Project not found"));
+    }
+    if (!project.attachment || !project.attachment.attachmentUrl) {
+      return next(errorHandler(404, "No attachment found for this project"));
+    }
+    const downloadUrl = `${req.protocol}://${req.get("host")}${
+      project.attachment.attachmentUrl
+    }`;
+    res.status(200).json({
+      downloadUrl,
+      success: true,
+      message: "Dowmload url Provided",
+    });
+  } catch (error) {
+    next(error);
+  }
+};

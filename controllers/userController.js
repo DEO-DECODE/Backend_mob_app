@@ -146,3 +146,27 @@ export const acceptOffer = async (req, res, next) => {
     next(error);
   }
 };
+
+export const assignFreelancerToProject = async (req, res, next) => {
+  try {
+    const { projectId, freelancerId } = req.body;
+    const project = await Project.findById(projectId);
+    if (!project) {
+      return next(errorHandler(404, "No Such Project Exist"));
+    }
+    const freelancer = await User.findById(freelancerId);
+    if (!freelancer) {
+      return next(errorHandler(404, "No Freelancer found"));
+    }
+    project.assignedTo = freelancerId;
+    project.status = "active";
+    await project.save();
+    res.status(200).json({
+      success: true,
+      message: `Project assigned to freelancer ${freelancer.name}`,
+      project,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

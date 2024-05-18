@@ -86,7 +86,9 @@ export const getProjectsByAssignedTo = async (req, res, next) => {
   try {
     const { id } = req.user;
     console.log(id);
-    const projects = await Project.find().populate("assignedTo");
+    const projects = await Project.find({ assignedTo: id }).populate(
+      "assignedTo"
+    );
 
     if (!projects || projects.length === 0) {
       return next(new Error("No projects found for this user"));

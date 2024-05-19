@@ -197,3 +197,22 @@ export const rejectDocument = async (req, res, next) => {
     next(error);
   }
 };
+
+export const deleteProposal = async (req, res, next) => {
+  try {
+    const proposalId = req.params.id;
+    const proposal = await Proposal.findById(proposalId).populate("projectId");
+    if (!proposal) {
+      return next(errorHandler(404, "Proposal not found"));
+    }
+    if (proposal.projectId.uploadedBy.toString() !== req.user.id) {
+      return next(
+        errorHandler(403, "You do not have permission to delete this proposal")
+      );
+    }
+    await Proposal.findByIdAndDelete(proposalId);
+    res.status(200).json({ message: "Proposal deleted successfully" });
+  } catch (error) {
+    next(error);
+  }
+};

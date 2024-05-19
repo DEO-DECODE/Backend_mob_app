@@ -43,7 +43,7 @@ router.put(
   rejectDocument
 );
 router.delete(
-  "/deleteproposal",
+  "/deleteproposal/:id",
   isAuthenticated,
   autherizedClient,
   deleteProposal

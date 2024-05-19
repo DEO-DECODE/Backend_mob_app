@@ -211,7 +211,9 @@ export const deleteProposal = async (req, res, next) => {
       );
     }
     await Proposal.findByIdAndDelete(proposalId);
-    res.status(200).json({ message: "Proposal deleted successfully" });
+    res
+      .status(200)
+      .json({ sucess: true, message: "Proposal deleted successfully" });
   } catch (error) {
     next(error);
   }

@@ -26,7 +26,7 @@ export const autherizedAdmin = (req, res, next) => {
 };
 export const autherizedFreelancer = (req, res, next) => {
   if (
-    req.user.accountType !== "freelancer" ||
+    req.user.accountType !== "freelancer" &&
     req.user.accountType !== "admin"
   ) {
     return next(errorHandler(403, "You can not access this resource"));
@@ -34,7 +34,7 @@ export const autherizedFreelancer = (req, res, next) => {
   next();
 };
 export const autherizedClient = (req, res, next) => {
-  if (req.user.accountType !== "client" || req.user.accountType !== "admin") {
+  if (req.user.accountType !== "client" && req.user.accountType !== "admin") {
     return next(errorHandler(403, "You can not access this resource"));
   }
   next();

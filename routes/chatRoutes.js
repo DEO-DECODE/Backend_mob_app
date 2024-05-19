@@ -1,5 +1,9 @@
 import express from "express";
-import { saveChats, getAllChats } from "../controllers/chatControllers.js";
+import {
+  saveChats,
+  getAllChatsByProjectId,
+  deleteChatsByProjectId,
+} from "../controllers/chatControllers.js";
 import { upload } from "../middlewares/uploadMiddleware.js";
 import { isAuthenticated } from "../middlewares/auth.js";
 const router = express.Router();
@@ -9,5 +13,6 @@ router.post(
   upload.single("attachment"),
   saveChats
 );
-router.get("/getallchats", isAuthenticated, getAllChats);
+router.get("/getallchats/:projectId", isAuthenticated, getAllChatsByProjectId);
+router.delete("/deletechats/:projectId", deleteChatsByProjectId);
 export default router;

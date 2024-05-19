@@ -19,6 +19,7 @@ router.put(
 router.get(
   "/getprojectsbyassignedto",
   isAuthenticated,
+  autherizedFreelancer,
   getProjectsByAssignedTo
 );
 router.get(

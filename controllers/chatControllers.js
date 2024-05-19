@@ -69,3 +69,30 @@ export const deleteChatsByProjectId = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getChatAttachmentUrl = async (req, res, next) => {
+  try {
+    const { chatId } = req.params;
+
+    const chat = await Chat.findById(chatId);
+    if (!chat) {
+      return next(errorHandler(404, "Chat not found"));
+    }
+
+    if (!chat.attachment || !chat.attachment.attachmentUrl) {
+      return next(errorHandler(404, "No attachment found for this chat"));
+    }
+
+    const protocol = req.protocol;
+    const host = req.get("host");
+    const attachmentUrl = `${protocol}://${host}${chat.attachment.attachmentUrl}`;
+
+    res.status(200).json({
+      attachmentUrl,
+      success: true,
+      message: "Attachment Url Provided",
+    });
+  } catch (error) {
+    next(error);
+  }
+};

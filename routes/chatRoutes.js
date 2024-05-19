@@ -3,6 +3,7 @@ import {
   saveChats,
   getAllChatsByProjectId,
   deleteChatsByProjectId,
+  getChatAttachmentUrl
 } from "../controllers/chatControllers.js";
 import { upload } from "../middlewares/uploadMiddleware.js";
 import { isAuthenticated } from "../middlewares/auth.js";
@@ -14,5 +15,14 @@ router.post(
   saveChats
 );
 router.get("/getallchats/:projectId", isAuthenticated, getAllChatsByProjectId);
-router.delete("/deletechats/:projectId", deleteChatsByProjectId);
+router.delete(
+  "/deletechats/:projectId",
+  isAuthenticated,
+  deleteChatsByProjectId
+);
+/*
+Once the Status of the project gets completed, We will delete all the chats
+corresponding to that project.
+*/
+router.get('/attachmentUrl/:chatId',isAuthenticated, getChatAttachmentUrl);
 export default router;

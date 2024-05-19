@@ -19,7 +19,6 @@ export const login = async (req, res, next) => {
     if (!isPasswordMatched) {
       return next(errorHandler(400, "Invalid email or password"));
     }
-    // console.log(user);
     sendToken(user, 201, res, "Login Successfully", next);
   } catch (error) {
     next(error);
@@ -50,8 +49,6 @@ export const register = async (req, res, next) => {
 };
 export const updateUser = async (req, res, next) => {
   try {
-    // console.log(req.body);
-    console.log(req.user);
     const user = await User.findByIdAndUpdate(
       req.user.id,
       {
@@ -169,6 +166,33 @@ export const assignFreelancerToProject = async (req, res, next) => {
       message: `Project assigned to freelancer ${freelancer.name}`,
       project,
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const rejectDocument = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const projectId = req.params.id;
+    const project = await Project.findOneAndUpdate(
+      { _id: projectId, uploadedBy: userId },
+      {
+        $set: {
+          delivery: null,
+          status: "available",
+        },
+      },
+      { new: true }
+    );
+    if (!project) {
+      return next(
+        errorHandler(404, "Project not found or you do not own this project")
+      );
+    }
+    res
+      .status(200)
+      .json({ project, sucess: true, message: "Project updated successfully" });
   } catch (error) {
     next(error);
   }

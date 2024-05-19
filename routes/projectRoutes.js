@@ -1,5 +1,9 @@
 import express from "express";
-import { autherizedClient, isAuthenticated } from "../middlewares/auth.js";
+import {
+  autherizedClient,
+  autherizedFreelancer,
+  isAuthenticated,
+} from "../middlewares/auth.js";
 import {
   addProject,
   getProjects,
@@ -16,5 +20,9 @@ router.post(
   addProject
 );
 router.get("/getprojects", isAuthenticated, getProjects);
-router.get("/getproject/:id", isAuthenticated, getProjectByid);
+router.get(
+  "/getproject/:id",
+  isAuthenticated,
+  getProjectByid
+);
 export default router;

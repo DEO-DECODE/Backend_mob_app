@@ -8,7 +8,9 @@ import {
   getOwnProfile,
   getDownloadUrl,
   getProposalsByProjectId,
-  acceptOffer,
+  assignFreelancerToProject,
+  rejectDocument,
+  deleteProposal,
 } from "../controllers/userController.js";
 import { isAuthenticated, autherizedClient } from "../middlewares/auth.js";
 router.post("/login", login);
@@ -16,12 +18,34 @@ router.post("/register", register);
 router.route("/update").put(isAuthenticated, updateUser);
 router.delete("/delete", isAuthenticated, deleteProfile);
 router.get("/me", isAuthenticated, getOwnProfile);
-router.put("/acceptoffer/:id", isAuthenticated, acceptOffer);
-router.get("/acceptanddownlaod/:id", isAuthenticated, getDownloadUrl);
+router.get(
+  "/acceptanddownload/:id",
+  isAuthenticated,
+  autherizedClient,
+  getDownloadUrl
+);
 router.get(
   "/getproposalsbyprojectid/:id",
   isAuthenticated,
   autherizedClient,
   getProposalsByProjectId
+);
+router.put(
+  "/assignfreelancer",
+  isAuthenticated,
+  autherizedClient,
+  assignFreelancerToProject
+);
+router.put(
+  "/rejectdocument/:id",
+  isAuthenticated,
+  autherizedClient,
+  rejectDocument
+);
+router.delete(
+  "/deleteproposal/:id",
+  isAuthenticated,
+  autherizedClient,
+  deleteProposal
 );
 export default router;

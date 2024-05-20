@@ -22,7 +22,7 @@ export const addProject = async (req, res, next) => {
       description,
       attachment: {
         attachmentName: originalname,
-        attachmentUrl: path,
+        attachmentUrl: `/uploads/${filename}`,
       },
       status,
     });

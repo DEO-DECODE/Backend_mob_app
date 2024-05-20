@@ -19,7 +19,6 @@ export const login = async (req, res, next) => {
     if (!isPasswordMatched) {
       return next(errorHandler(400, "Invalid email or password"));
     }
-    // console.log(user);
     sendToken(user, 201, res, "Login Successfully", next);
   } catch (error) {
     next(error);
@@ -50,8 +49,6 @@ export const register = async (req, res, next) => {
 };
 export const updateUser = async (req, res, next) => {
   try {
-    // console.log(req.body);
-    console.log(req.user);
     const user = await User.findByIdAndUpdate(
       req.user.id,
       {
@@ -105,14 +102,17 @@ export const getDownloadUrl = async (req, res, next) => {
     if (!project) {
       return next(errorHandler(404, "Project not found"));
     }
-    if (!project.attachment || !project.attachment.attachmentUrl) {
-      return next(errorHandler(404, "No attachment found for this project"));
-    }
-    const downloadUrl = `${req.protocol}://${req.get("host")}${
+
+    const downloadUrlforDelivery = `${req.protocol}://${req.get("host")}${
+      project.delivery.deliveryUrl
+    }`;
+
+    const downloadUrlforAttachment = `${req.protocol}://${req.get("host")}${
       project.attachment.attachmentUrl
     }`;
     res.status(200).json({
-      downloadUrl,
+      downloadUrlforDelivery,
+      downloadUrlforAttachment,
       success: true,
       message: "Dowmload url Provided",
     });
@@ -142,6 +142,78 @@ export const getProposalsByProjectId = async (req, res, next) => {
 
 export const acceptOffer = async (req, res, next) => {
   try {
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const assignFreelancerToProject = async (req, res, next) => {
+  try {
+    const { projectId, freelancerId } = req.body;
+    const project = await Project.findById(projectId);
+    if (!project) {
+      return next(errorHandler(404, "No Such Project Exist"));
+    }
+    const freelancer = await User.findById(freelancerId);
+    if (!freelancer) {
+      return next(errorHandler(404, "No Freelancer found"));
+    }
+    project.assignedTo = freelancerId;
+    project.status = "active";
+    await project.save();
+    res.status(200).json({
+      success: true,
+      message: `Project assigned to freelancer ${freelancer.name}`,
+      project,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const rejectDocument = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const projectId = req.params.id;
+    const project = await Project.findOneAndUpdate(
+      { _id: projectId, uploadedBy: userId },
+      {
+        $set: {
+          delivery: null,
+          status: "available",
+        },
+      },
+      { new: true }
+    );
+    if (!project) {
+      return next(
+        errorHandler(404, "Project not found or you do not own this project")
+      );
+    }
+    res
+      .status(200)
+      .json({ project, sucess: true, message: "Project updated successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteProposal = async (req, res, next) => {
+  try {
+    const proposalId = req.params.id;
+    const proposal = await Proposal.findById(proposalId).populate("projectId");
+    if (!proposal) {
+      return next(errorHandler(404, "Proposal not found"));
+    }
+    if (proposal.projectId.uploadedBy.toString() !== req.user.id) {
+      return next(
+        errorHandler(403, "You do not have permission to delete this proposal")
+      );
+    }
+    await Proposal.findByIdAndDelete(proposalId);
+    res
+      .status(200)
+      .json({ sucess: true, message: "Proposal deleted successfully" });
   } catch (error) {
     next(error);
   }

@@ -17,7 +17,7 @@ export const bidForProject = async (req, res, next) => {
     const existingProposal = await Proposal.findOne({
       proposedBy,
       projectId,
-      proposalStatus: { $ne: "completed" },
+      // proposalStatus: { $ne: "completed" },
     });
 
     if (existingProposal) {
@@ -34,9 +34,9 @@ export const bidForProject = async (req, res, next) => {
       finalPrice,
     });
     res.status(201).json({
+      proposal,
       sucess: true,
       message: "Proposed Successfully",
-      proposal,
     });
   } catch (error) {
     next(error);
@@ -48,10 +48,7 @@ export const uploadDocument = async (req, res, next) => {
     if (!req.file) {
       return next(errorHandler(400, "No file uploaded"));
     }
-    if (!req.file) {
-      next(errorHandler(400, "No file Uploaded"));
-    }
-    const { originalname, filename, path } = req.file;
+    const { originalname, filename } = req.file;
     const delivery = {
       deliveryName: originalname,
       deliveryUrl: `/uploads/${filename}`,
@@ -60,8 +57,6 @@ export const uploadDocument = async (req, res, next) => {
     if (!project) {
       return next(errorHandler(404, "Project not found"));
     }
-    console.log(project.assignedTo);
-    console.log(req.user.id);
     if (project.assignedTo.toString() !== req.user.id.toString()) {
       return next(
         errorHandler(401, "You cannot upload doccument for this project")
@@ -86,16 +81,41 @@ export const getProjectsByAssignedTo = async (req, res, next) => {
   try {
     const { id } = req.user;
     console.log(id);
-    const projects = await Project.find().populate("assignedTo");
+    const projects = await Project.find({ assignedTo: id }).populate(
+      "assignedTo"
+    );
 
     if (!projects || projects.length === 0) {
-      return next(new Error("No projects found for this user"));
+      return next(errorHandler(404, "No projects found for this user"));
     }
 
     res.status(200).json({
       success: true,
       message: `Showing projects assigned to user ${id}`,
       projects,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getDownloadUrl = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const project = await Project.findById(id);
+    if (!project) {
+      return next(errorHandler(404, "Project not found"));
+    }
+    if (!project.attachment || !project.attachment.attachmentUrl) {
+      return next(errorHandler(404, "No attachment found for this project"));
+    }
+    const downloadUrl = `${req.protocol}://${req.get("host")}${
+      project.attachment.attachmentUrl
+    }`;
+    res.status(200).json({
+      downloadUrl,
+      success: true,
+      message: "Dowmload url Provided",
     });
   } catch (error) {
     next(error);

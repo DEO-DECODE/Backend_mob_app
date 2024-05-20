@@ -8,6 +8,7 @@ import {
   addProject,
   getProjects,
   getProjectByid,
+  getProjectsUploadedBy
 } from "../controllers/projectControllers.js";
 import { upload } from "../middlewares/uploadMiddleware.js";
 const router = express.Router();
@@ -20,9 +21,11 @@ router.post(
   addProject
 );
 router.get("/getprojects", isAuthenticated, getProjects);
+router.get("/getproject/:id", isAuthenticated, getProjectByid);
 router.get(
-  "/getproject/:id",
+  "/getprojectsuploadedby",
   isAuthenticated,
-  getProjectByid
+  autherizedClient,
+  getProjectsUploadedBy
 );
 export default router;

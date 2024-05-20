@@ -63,3 +63,21 @@ export const getProjectByid = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getProjectsUploadedBy = async (req, res, next) => {
+  try {
+    const projects = await Project.find({ uploadedBy: req.user.id });
+    if (!projects) {
+      return next(
+        errorHandler(404, `No Project has been uploaded by ${req.user.name}`)
+      );
+    }
+    res.status(200).json({
+      projects,
+      success: true,
+      message: `Fetching all projects uploaded by ${req.user.name}`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

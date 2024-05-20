@@ -218,3 +218,20 @@ export const deleteProposal = async (req, res, next) => {
     next(error);
   }
 };
+
+export const acceptDoccument = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const project = await Project.findById(id);
+    if (!project) {
+      return next(errorHandler(404, "No Project Found"));
+    }
+    project.status = "completed";
+    res.status(200).json({
+      success: true,
+      message: `Project ${project.title} has been marked completed`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

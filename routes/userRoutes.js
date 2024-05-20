@@ -11,6 +11,7 @@ import {
   assignFreelancerToProject,
   rejectDocument,
   deleteProposal,
+  acceptDoccument
 } from "../controllers/userController.js";
 import { isAuthenticated, autherizedClient } from "../middlewares/auth.js";
 router.post("/login", login);
@@ -48,4 +49,5 @@ router.delete(
   autherizedClient,
   deleteProposal
 );
+router.put("/acceptdocument/:id", isAuthenticated, autherizedClient, acceptDoccument);
 export default router;

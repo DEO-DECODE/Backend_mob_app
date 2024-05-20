@@ -48,4 +48,5 @@ router.delete(
   autherizedClient,
   deleteProposal
 );
+router.get("/viewDoc/:id", isAuthenticated, autherizedClient, getDownloadUrl);
 export default router;

@@ -51,7 +51,7 @@ export const uploadDocument = async (req, res, next) => {
     const { originalname, filename } = req.file;
     const delivery = {
       deliveryName: originalname,
-      deliveryUrl: `/uploads/${filename}`,
+      deliveryUrl: `/uploads${filename}`,
     };
     const project = await Project.findById(id);
     if (!project) {

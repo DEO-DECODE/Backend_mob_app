@@ -28,7 +28,7 @@ export const deleteUser = async (req, res, next) => {
 
 export const addProjectByAdmin = async (req, res, next) => {
   try {
-    console.log(req);
+    // console.log(req);
     const { id } = req.params;
     const isExist = await User.findById(id);
     if (!isExist) {

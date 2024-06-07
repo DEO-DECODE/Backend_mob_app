@@ -15,6 +15,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 config({ path: "./config/config.env" });
+// console.log(process.env);
 dbConnection();
 const app = express();
 app.use(cors());

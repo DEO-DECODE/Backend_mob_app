@@ -43,7 +43,7 @@ export const register = async (req, res, next) => {
     });
     sendToken(user, 201, res, "User registered successfully", next);
   } catch (error) {
-    console.log("Some error occured in login");
+    console.log("Some error occured in registration");
     next(error);
   }
 };
